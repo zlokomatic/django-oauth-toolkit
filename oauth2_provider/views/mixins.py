@@ -28,6 +28,8 @@ class OAuthLibMixin(object):
     """
     server_class = None
     validator_class = None
+    access_token_generator = None
+    refresh_token_generator = None
     oauthlib_backend_class = None
 
     @classmethod
@@ -55,6 +57,30 @@ class OAuthLibMixin(object):
             return cls.validator_class
 
     @classmethod
+    def get_access_token_generator(cls):
+        """
+        Return the RequestValidator implementation class to use
+        """
+        if cls.access_token_generator is None:
+            raise ImproperlyConfigured(
+                "OAuthLibMixin requires either a definition of 'access_token_generator'"
+                " or an implementation of 'get_access_token_generator()'")
+        else:
+            return cls.access_token_generator
+
+    @classmethod
+    def get_refresh_token_generator(cls):
+        """
+        Return the RequestValidator implementation class to use
+        """
+        if cls.refresh_token_generator is None:
+            raise ImproperlyConfigured(
+                "OAuthLibMixin requires either a definition of 'refresh_token_generator'"
+                " or an implementation of 'get_refresh_token_generator()'")
+        else:
+            return cls.refresh_token_generator
+
+    @classmethod
     def get_oauthlib_backend_class(cls):
         """
         Return the OAuthLibCore implementation class to use
@@ -74,7 +100,9 @@ class OAuthLibMixin(object):
         """
         server_class = cls.get_server_class()
         validator_class = cls.get_validator_class()
-        return server_class(validator_class())
+        access_token_generator = cls.get_access_token_generator()
+        refresh_token_generator = cls.get_refresh_token_generator()
+        return server_class(validator_class(), token_generator=access_token_generator, refresh_token_generator=refresh_token_generator)
 
     @classmethod
     def get_oauthlib_core(cls):

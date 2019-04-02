@@ -5,6 +5,7 @@ from oauthlib.oauth2 import Server
 
 from oauth2_provider.oauth2_backends import OAuthLibCore
 from oauth2_provider.oauth2_validators import OAuth2Validator
+from oauth2_provider.generators import random_token_generator
 from oauth2_provider.views.mixins import (
     OAuthLibMixin, ProtectedResourceMixin, ScopedResourceMixin
 )
@@ -31,6 +32,8 @@ class TestOAuthLibMixin(BaseTest):
         class TestView(OAuthLibMixin, View):
             validator_class = OAuth2Validator
             oauthlib_backend_class = OAuthLibCore
+            access_token_generator = random_token_generator
+            refresh_token_generator = random_token_generator
 
         test_view = TestView()
 
@@ -39,6 +42,30 @@ class TestOAuthLibMixin(BaseTest):
     def test_missing_validator_class(self):
         class TestView(OAuthLibMixin, View):
             server_class = Server
+            access_token_generator = random_token_generator
+            refresh_token_generator = random_token_generator
+            oauthlib_backend_class = OAuthLibCore
+
+        test_view = TestView()
+
+        self.assertRaises(ImproperlyConfigured, test_view.get_server)
+
+    def test_missing_access_token_generator(self):
+        class TestView(OAuthLibMixin, View):
+            server_class = Server
+            validator_class = OAuth2Validator
+            refresh_token_generator = random_token_generator
+            oauthlib_backend_class = OAuthLibCore
+
+        test_view = TestView()
+
+        self.assertRaises(ImproperlyConfigured, test_view.get_server)
+
+    def test_missing_refresh_token_generator(self):
+        class TestView(OAuthLibMixin, View):
+            server_class = Server
+            validator_class = OAuth2Validator
+            access_token_generator = random_token_generator
             oauthlib_backend_class = OAuthLibCore
 
         test_view = TestView()
@@ -50,6 +77,8 @@ class TestOAuthLibMixin(BaseTest):
             server_class = Server
             validator_class = OAuth2Validator
             oauthlib_backend_class = OAuthLibCore
+            access_token_generator = random_token_generator
+            refresh_token_generator = random_token_generator
 
         request = self.request_factory.get("/fake-req")
         request.user = "fake"

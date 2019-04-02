@@ -84,6 +84,8 @@ class AuthorizationView(BaseAuthorizationView, FormView):
 
     server_class = oauth2_settings.OAUTH2_SERVER_CLASS
     validator_class = oauth2_settings.OAUTH2_VALIDATOR_CLASS
+    access_token_generator = oauth2_settings.OAUTH2_ACCESS_TOKEN_GENERATOR
+    refresh_token_generator = oauth2_settings.OAUTH2_REFRESH_TOKEN_GENERATOR
     oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
 
     skip_authorization_completely = False
@@ -199,6 +201,8 @@ class TokenView(OAuthLibMixin, View):
     """
     server_class = oauth2_settings.OAUTH2_SERVER_CLASS
     validator_class = oauth2_settings.OAUTH2_VALIDATOR_CLASS
+    access_token_generator = oauth2_settings.OAUTH2_ACCESS_TOKEN_GENERATOR
+    refresh_token_generator = oauth2_settings.OAUTH2_REFRESH_TOKEN_GENERATOR
     oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
 
     @method_decorator(sensitive_post_parameters("password"))
@@ -226,6 +230,8 @@ class RevokeTokenView(OAuthLibMixin, View):
     """
     server_class = oauth2_settings.OAUTH2_SERVER_CLASS
     validator_class = oauth2_settings.OAUTH2_VALIDATOR_CLASS
+    access_token_generator = oauth2_settings.OAUTH2_ACCESS_TOKEN_GENERATOR
+    refresh_token_generator = oauth2_settings.OAUTH2_REFRESH_TOKEN_GENERATOR
     oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
 
     def post(self, request, *args, **kwargs):

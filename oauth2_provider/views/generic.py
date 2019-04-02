@@ -12,6 +12,8 @@ class ProtectedResourceView(ProtectedResourceMixin, View):
     """
     server_class = oauth2_settings.OAUTH2_SERVER_CLASS
     validator_class = oauth2_settings.OAUTH2_VALIDATOR_CLASS
+    access_token_generator = oauth2_settings.OAUTH2_ACCESS_TOKEN_GENERATOR
+    refresh_token_generator = oauth2_settings.OAUTH2_REFRESH_TOKEN_GENERATOR
     oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
 
 
